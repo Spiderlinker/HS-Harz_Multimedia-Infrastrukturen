@@ -5,7 +5,7 @@ Hier geht es zum Node.js [Download](https://www.google.com)
 Dokumentation  der Installation [Node.js](https://www.google.com)
 
 ## Hilfreiche Kurse
-Node.js [Video-Kurs] (https://www.youtube.com/playlist?list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU)
+Node.js [Video-Kurs](https://www.youtube.com/playlist?list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU)
 
 ## Empfholene Pakete
 Globale Installation von Nodemon: ```npm install -g nodemon```
