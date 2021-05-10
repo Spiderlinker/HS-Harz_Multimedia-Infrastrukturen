@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <%- include('./partials/head.ejs') %>
+
+    <body style="background-image: url('assets/images/landing_business.jpg');">  
+
+        <%- include('./partials/nav_landing.ejs') %>
+
+        <main role="main">
+            <!-- Page Content -->
+            <div class="id-header1">
+                <!-- TODO add another placeholder for footer-->
+                <img class="img-fuid"  src="#" alt="Empty">
+                <h1 class="display1">Multimediale Infrastrukturen und Anwendungen</h1>
+                <span> Kurze Beschreibung </span>
+                <div>
+                    <a href="#" class="btn btn-small btn-landing">Zur Anwendung</a>
+                </div>
+            </div>   
+        </main>  
+        
+        <%- include('./partials/footer.ejs') %>
+
+    </body>
+
+    <%- include('./partials/scripts.ejs') %>
+
+</html>

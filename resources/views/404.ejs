@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <%- include('./partials/head.ejs') %>
+
+    <body class="err-404-color">  
+
+        <%- include('./partials/nav.ejs') %>
+
+        <main role="main">
+            <!-- Page Content -->
+            <div class="id-header-404">
+                <img class="img-fluid"  src="assets/images/404_error.jpg" alt="Empty">
+            </div>   
+        </main>  
+        
+        <%- include('./partials/footer.ejs') %>
+
+    </body>
+
+    <%- include('./partials/scripts.ejs') %>
+
+</html>
