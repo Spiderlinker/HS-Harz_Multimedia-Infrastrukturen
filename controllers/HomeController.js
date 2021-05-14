@@ -55,7 +55,7 @@ const load404 = (req, res) => {
 
 
 const handleDownload = (req, res, next) => {
-    let requestedURL = req.url.replace('/download/', '');
+    const requestedURL = req.params.id;
     if (fileMap.has(requestedURL)) {
         let requestedFile = fileMap.get(requestedURL);
         res.download(requestedFile);

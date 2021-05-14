@@ -41,7 +41,7 @@ app.use(morgan('dev'));
 /*------Handle Route requests-----------------------------------------------------------------------*/
 
 app.get('/', homeController.loadHome);
-app.get('/download/*', homeController.handleDownload);
+app.get('/download/:id', homeController.handleDownload);
 
 app.use(homeController.load404);
 
