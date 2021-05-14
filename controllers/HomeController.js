@@ -18,7 +18,6 @@ const handleDownload = (req, res, next) => {
     }
 }
 
-
 //export this function when require
 module.exports = {
     loadHome,

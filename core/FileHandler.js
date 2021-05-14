@@ -72,7 +72,6 @@ function clear() {
     fileMap.clear();
 }
 
-
 module.exports = {
     has,
     getFile,
