@@ -42,6 +42,10 @@ app.use(morgan('dev'));
 
 app.get('/', homeController.loadHome);
 
+app.get('/connection', homeController.loadConnectionView);
+
+app.post('/call', homeController.loadUserView);
+
 app.use(homeController.load404);
 
 /*------End Handle Route requests-------------------------------------------------------------------*/

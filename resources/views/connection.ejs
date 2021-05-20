@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <%- include('./partials/head.ejs') %>
+
+    <body>  
+
+        <%- include('./partials/nav.ejs') %>
+
+        <main role="main" class="specify-screen-height">
+            <div class = "container"> 
+                <div class = "row id-header-2 pad-top">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <h1 class = "display1"> Geben Sie die Details zum Anruf an! <h1>
+                    </div>
+                </div>
+                <form class="id-header-2 slight-pad-top" method="post" action="/call">
+                    <div class="form-group">
+                        <label for="name">Ihr Nutzername / Name</label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Max Mustermann" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ip">IP-Adresse des anzurufenden Teilnehmers</label>
+                        <input type="text" class="form-control" name="ip" id="ip" placeholder="192.168.178.1" 
+                        minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$"
+                        required>
+                    </div>
+                    <center> 
+                        <button type="submit" class="btn btn-small btn-landing">Anrufen</button>
+                    </center>
+                </form>
+            </div>
+        </main>  
+        
+        <%- include('./partials/footer.ejs') %>
+
+    </body>
+
+    <%- include('./partials/scripts.ejs') %>
+
+</html>
