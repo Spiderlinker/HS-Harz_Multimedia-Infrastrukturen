@@ -1,3 +1,5 @@
+const fileHandler = require('../core/FileHandler');
+
 //create controller function to load the homepage
 //https://acidtango.com/thelemoncrunch/how-to-implement-a-video-conference-with-webrtc-and-node/
 const loadHome = (req, res) => {
@@ -5,7 +7,16 @@ const loadHome = (req, res) => {
 }
 
 const load404 = (req, res) => {
-    res.render('404', { title: '404'});
+    res.status(404).render('404', { title: '404' });
+}
+
+const handleDownload = (req, res, next) => {
+    const requestedURL = req.params.id;
+    if (fileHandler.has(requestedURL)) {
+        res.download(fileHandler.getFile(requestedURL));
+    } else {
+        next();
+    }
 }
 
 const loadConnectionView = (req, res) => {
@@ -21,5 +32,6 @@ module.exports = {
     loadHome,
     loadConnectionView,
     loadUserView,
+    handleDownload,
     load404
 }

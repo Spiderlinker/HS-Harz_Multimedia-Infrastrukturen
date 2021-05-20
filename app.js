@@ -11,7 +11,7 @@ const morgan = require('morgan');
 
 const conBasePath = './controllers/'
 
-const homeController = require(conBasePath+'homeController');
+const homeController = require(conBasePath + 'homeController');
 
 /*------end Controllers ---------------------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ app.listen(3000);
 //give access to an static folder / public folder / for css files or other public files
 app.use(express.static('public'));
 //enable urlencode to handle post requests
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 /*------End Base Configuration----------------------------------------------------------------------*/
 
@@ -41,11 +41,13 @@ app.use(morgan('dev'));
 /*------Handle Route requests-----------------------------------------------------------------------*/
 
 app.get('/', homeController.loadHome);
+app.get('/download/:id', homeController.handleDownload);
 
 app.get('/connection', homeController.loadConnectionView);
 
 app.post('/call', homeController.loadUserView);
 
 app.use(homeController.load404);
+
 
 /*------End Handle Route requests-------------------------------------------------------------------*/
