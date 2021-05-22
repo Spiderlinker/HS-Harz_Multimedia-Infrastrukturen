@@ -109,7 +109,7 @@ class Session {
 
     clearMessages() {
         // Nachrichtendatei leeren
-        fs.writeFile(PATH_MESSAGES, JSON.stringify([]), 'utf8');
+        fs.writeFile(PATH_MESSAGES, JSON.stringify([]), 'utf8', () => { });
     }
 
     addMessage(message) {
@@ -122,6 +122,8 @@ class Session {
             let messages = JSON.parse(data);
             // Neue Nachricht anhängen
             messages.push(message);
+            // Nachrichten anhand des Timestamps sortieren
+            messages.sort((a, b) => a.timestamp - b.timestamp);
             // Alle Nachrichten wieder in die Datei schreiben
             let json = JSON.stringify(messages);
             fs.writeFile(PATH_MESSAGES, json, 'utf8', () => console.log("Message saved"));
