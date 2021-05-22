@@ -389,6 +389,11 @@ p{
    text-overflow: ellipsis;
 }
 
+.chat-messages {
+   max-height: 450px;
+   overflow-y: scroll;
+}
+
 /*****************CHAT BODY *******************/
 .chat-body h6 {
    font-size: 20px;
