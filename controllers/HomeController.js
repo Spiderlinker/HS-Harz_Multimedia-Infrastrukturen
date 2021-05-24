@@ -2,6 +2,9 @@ const fileHandler = require('../core/FileHandler');
 
 //create controller function to load the homepage
 //https://acidtango.com/thelemoncrunch/how-to-implement-a-video-conference-with-webrtc-and-node/
+//https://gist.github.com/mondain
+//https://gist.github.com/mondain/b0ec1cf5f60ae726202e#file-public-stun-list-txt
+//Uni Halle: 141.48.165.136:3478
 const loadHome = (req, res) => {
     res.render('index');
 }

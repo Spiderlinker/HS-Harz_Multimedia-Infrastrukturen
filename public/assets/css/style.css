@@ -283,18 +283,21 @@ p{
    background-color: white;
 }
 
+
+/*Call view*/
 .scale-camera-receiver{
    height: 50vh !important;
    width: 40vw !important;
+   background-color: black;
 }
 
 
 .scale-camera-caller{
    height: 30vh !important;
    width: 20vw !important;
+   background-color: black;
 }
 
-/*Call view*/
 .mar-call{
    margin: 1vw;
 }
