@@ -1,16 +1,21 @@
 const roomHandler = require('../core/RoomHandler');
+const uuid = require("uuid");
 
 const handleSocket = (socket) => {
   socket.on('join', (roomId) => {
-    roomHandler.checkActualClients(roomId, "connect");
-    console.log(roomHandler.getClientForRoom(roomId));
+
+    if(roomId == null)
+      roomId = uuid.v4();
+
+    const clientCount = roomHandler.checkActualClients(roomId, "connect").get(roomId);
+    console.log(`Die aktuelle Nutzeranzahl für den Raum: ${roomId} beträgt: ${clientCount}`);
 
   // These events are emitted only to the sender socket.
-  if (roomHandler.getClientForRoom(roomId) == 0) {
+  if (clientCount == 0) {
     console.log(`Creating room ${roomId} and emitting room_created socket event`)
     socket.join(roomId)
     socket.emit('room_created', roomId)
-  } else if (roomHandler.getClientForRoom(roomId) == 1) {
+  } else if (clientCount == 1) {
     console.log(`Joining room ${roomId} and emitting room_joined socket event`)
     socket.join(roomId)
     socket.emit('room_joined', roomId)
