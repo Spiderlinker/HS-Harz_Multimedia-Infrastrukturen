@@ -1,3 +1,5 @@
+import messageHandler from './MessageHandler.js';
+
 // DOM elements.
 const roomSelectionContainer = document.getElementById('establish_connection_container')
 const roomInput = document.getElementById('room_id');
@@ -25,8 +27,6 @@ let remoteStream;
 let isRoomCreator;
 let rtcPeerConnection; // Connection between the local device and the remote peer.
 let roomId;
-
-let fileTransferChannel;
 
 // Free public STUN servers provided by Google.
 const iceServers = {
@@ -80,8 +80,11 @@ socket.on('start_call', async () => {
     addLocalTracks(rtcPeerConnection);
     rtcPeerConnection.ontrack = setRemoteStream;
     rtcPeerConnection.onicecandidate = sendIceCandidate;
-    // createFileDataChannel();
+
+    messageHandler.setupRoomCreateDataChannel(rtcPeerConnection);
+
     await createOffer(rtcPeerConnection);
+
   }
 });
 
@@ -94,10 +97,10 @@ socket.on('webrtc_offer', async (event) => {
     rtcPeerConnection.ontrack = setRemoteStream;
     rtcPeerConnection.onicecandidate = sendIceCandidate;
     rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
-    // createFileDataChannel();
-    await createAnswer(rtcPeerConnection);
 
-    sendFile("C:\\Users\\Charl\\Desktop\\Anwendungspraktikum2021SS.pdf");
+    messageHandler.setupRoomJoinDataChannel(rtcPeerConnection);
+
+    await createAnswer(rtcPeerConnection);
   }
 });
 
@@ -204,63 +207,3 @@ function sendIceCandidate(event) {
     });
   }
 }
-
-
-
-// function createFileDataChannel() {
-//   console.log("Creating file channel");
-//   fileTransferChannel = rtcPeerConnection.createDataChannel('FileTransferChannel');
-//   fileTransferChannel.binaryType = 'arraybuffer';
-//   fileTransferChannel.onmessage = async (event) => receiveFile(event);
-// }
-
-// async function sendFile(file) {
-//   console.log("sending file: " + file);
-//   if (!file) {
-//     return;
-//   }
-
-//   console.log("Sending...");
-//   const arrayBuffer = await file.arrayBuffer();
-//   for (let i = 0; i < arrayBuffer.byteLength; i += MAXIMUM_MESSAGE_SIZE) {
-//     fileTransferChannel.send(arrayBuffer.slice(i, i + MAXIMUM_MESSAGE_SIZE));
-//   }
-//   console.log("Send end of file message");
-//   fileTransferChannel.send(END_OF_FILE_MESSAGE);
-// }
-
-// function receiveFile(data) {
-//   console.log("receiving file...");
-//   const receivedBuffers = [];
-//   try {
-//     if (data !== END_OF_FILE_MESSAGE) {
-//       receivedBuffers.push(data);
-//     } else {
-//       const arrayBuffer = receivedBuffers.reduce((acc, arrayBuffer) => {
-//         const tmp = new Uint8Array(acc.byteLength + arrayBuffer.byteLength);
-//         tmp.set(new Uint8Array(acc), 0);
-//         tmp.set(new Uint8Array(arrayBuffer), acc.byteLength);
-//         return tmp;
-//       }, new Uint8Array());
-//       const blob = new Blob([arrayBuffer]);
-//       console.log("download file: ")
-//       downloadFile(blob, 'Textdatei.txt'); // TODO irgendwie anders übermitteln
-//     }
-//   } catch (err) {
-//     console.log('File transfer failed');
-//   }
-// }
-
-// function downloadFile(blob, fileName) {
-
-//   console.log("create html elements to download file");
-//   const a = document.createElement('a');
-//   const url = window.URL.createObjectURL(blob);
-//   a.href = url;
-//   a.download = fileName;
-//   a.click();
-//   window.URL.revokeObjectURL(url);
-//   a.remove()
-// }
-
-
