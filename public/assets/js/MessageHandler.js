@@ -65,7 +65,6 @@ function setupRoomJoinDataChannel(rtcPeerConnection) {
 
 function sendTextMessage(text) {
     let messageObj = {
-        // senderID: sessionId,
         senderName: nameInput.value,
         timestamp: Date.now(),
         type: 'chat',
@@ -116,6 +115,7 @@ function sendChat(message) {
     message.src = "own";
     appendMessageToChat(message);
 }
+
 function sendMessage(message) {
     chatChannel.send(JSON.stringify(message));
 }
@@ -130,6 +130,8 @@ function sendFileRequest(uuid) {
 
 function appendMessageToChat(message) {
     chatMessages.innerHTML += createMessageHTML(message);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
     if (message.type === 'file') {
         let btnDownloadFile = document.getElementById('btn-' + message.content.link);
         btnDownloadFile.addEventListener('click', () => {
