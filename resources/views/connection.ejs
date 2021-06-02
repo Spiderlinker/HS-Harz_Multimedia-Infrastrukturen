@@ -16,6 +16,7 @@
 
         <%- include('./partials/scripts.ejs') %>
         <script src="socket.io/socket.io.js"></script>
+        <!-- type="module" ist benötigt, damit das JavaScript-Modul andere Module importieren kann -->
         <script type="module" src="/assets/js/webRtcCon.js"></script>
     </body>
 </html>
