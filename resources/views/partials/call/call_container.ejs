@@ -1,0 +1,32 @@
+<div id ="call-container" style="display: none">
+    <div class="row mar-call">
+        <div class="col-sm-6 col-md-6 col-lg-6 align-items-center">
+            <video class="scale-camera-receiver" id="remote-video" autoplay="autoplay"></video>
+        </div> 
+        <div class="col-sm-6 col-md-6 col-lg-6 align-items-center">
+            <div class="container-fluid">
+                <div class="row mar-call">
+                    <div class="col-sm-12 col-md-12 col-lg-12 align-items-center">
+                        <video class="scale-camera-caller" id="local-video" autoplay="autoplay" muted="muted"></video>
+                    </div>
+                </div>
+                <div class="row mar-call">
+                    <div class="col-sm-12 col-md-12 col-lg-12 align-items-center">
+                        <%- include('settings.ejs') %>
+                    </div>
+                </div>
+                <div class="row mar-call">
+                    <div class="col-sm-12 col-md-12 col-lg-12 align-items-center">
+                        <p id = "room_id_display"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mar-call">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+                <%- include('chat.ejs') %>
+            </div>
+        </div>
+    </div> 
+</div>

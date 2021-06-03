@@ -2,8 +2,13 @@
 
 //for request and response handling
 const express = require('express');
+const app = express();
 //Middleware for logging purposes
 const morgan = require('morgan');
+
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
 
 /*------end third party imports--------------------------------------------------------------------*/
 
@@ -11,19 +16,24 @@ const morgan = require('morgan');
 
 const conBasePath = './controllers/'
 
-const homeController = require(conBasePath + 'homeController');
+const homeController = require(conBasePath + 'HomeController');
+const callController = require(conBasePath + 'CallController');
 
 /*------end Controllers ---------------------------------------------------------------------------*/
 
 /*------Base Configuration-------------------------------------------------------------------------*/
 
-const app = express();
+
 //register view engine - ejs for managing views
 app.set('view engine', 'ejs');
 //set base path for views
 app.set('views', 'resources/views');
 //start listen on request on localhost:3000 / 127.0.0.1:3000
-app.listen(3000);
+const port = process.env.PORT || 3000
+server.listen(port, () => {
+  console.log(`Express server listening on port ${port}`);
+});
+
 //give access to an static folder / public folder / for css files or other public files
 app.use(express.static('public'));
 //enable urlencode to handle post requests
@@ -47,7 +57,10 @@ app.get('/connection', homeController.loadConnectionView);
 
 app.post('/call', homeController.loadUserView);
 
+io.on('connection', callController.handleSocket);
+
 app.use(homeController.load404);
 
 
 /*------End Handle Route requests-------------------------------------------------------------------*/
+

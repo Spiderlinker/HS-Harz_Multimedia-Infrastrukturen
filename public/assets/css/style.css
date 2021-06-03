@@ -88,7 +88,7 @@ body{
   }
 
   .pad-bot-5{
-   padding-bottom: 5vh;
+      padding-bottom: 5vh;
    }
 
    .card-view-pad-top{
@@ -283,18 +283,21 @@ p{
    background-color: white;
 }
 
+
+/*Call view*/
 .scale-camera-receiver{
    height: 50vh !important;
    width: 40vw !important;
+   background-color: black;
 }
 
 
 .scale-camera-caller{
    height: 30vh !important;
    width: 20vw !important;
+   background-color: black;
 }
 
-/*Call view*/
 .mar-call{
    margin: 1vw;
 }
@@ -387,6 +390,11 @@ p{
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
+}
+
+.chat-messages {
+   max-height: 450px;
+   overflow-y: scroll;
 }
 
 /*****************CHAT BODY *******************/
@@ -522,7 +530,7 @@ p{
 .chat-body .answer-add .answer-btn {
    display: block;
    cursor: pointer;
-   width: 36px;
+   width: 150px;
    height: 36px;
    position: absolute;
    top: 50%;
