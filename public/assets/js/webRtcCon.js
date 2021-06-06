@@ -3,7 +3,6 @@ import messageHandler from './MessageHandler.js';
 // DOM elements.
 const roomSelectionContainer = document.getElementById('establish_connection_container')
 const roomInput = document.getElementById('room_id');
-const nameInput = document.getElementById('name');
 const connectButton = document.getElementById('connect_button');
 
 const choiceContainer = document.getElementById('choice-connection-container');
@@ -22,6 +21,8 @@ const saveSettingsButton = document.getElementById('save_settings');
 const videoChatContainer = document.getElementById('call-container');
 const localVideoComponent = document.getElementById('local-video');
 const remoteVideoComponent = document.getElementById('remote-video');
+const camDisableEnableButton = document.getElementById('cam_disable_enable');
+const micMuteUnmuteButton = document.getElementById('mic_mute_unmute');
 
 const roomIdDisplay = document.getElementById('room_id_display');
 
@@ -78,6 +79,14 @@ saveSettingsButton.addEventListener('click', () => {
 
 endCallButton.addEventListener('click', () => {
   location.reload();
+});
+
+camDisableEnableButton.addEventListener('click', () =>{
+  disableEnableCam();
+});
+
+micMuteUnmuteButton.addEventListener('click', () =>{
+  muteUnmuteMic();
 });
 
 // SOCKET EVENT CALLBACKS =====================================================
@@ -243,4 +252,14 @@ function sendIceCandidate(event) {
       candidate: event.candidate.candidate,
     });
   }
+}
+
+function muteUnmuteMic(){
+  localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+  console.log(localStream.getAudioTracks()[0]);
+}
+
+function disableEnableCam(){
+  localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+  console.log(localStream.getVideoTracks()[0]);
 }
