@@ -316,6 +316,12 @@ p{
    align-items: center;
 }
 
+.align-items-right{
+   display: flex;
+   justify-content: flex-end;
+   align-items: flex-end;
+}
+
 /*Chat*/
 .row.row-broken {
    padding-bottom: 0;
@@ -325,6 +331,7 @@ p{
 }
 .chat {
    height: calc(100vh - 180px);
+   font-family: 'Barlow', sans-serif;
 }
 .decor-default {
    background-color: #ffffff;
@@ -507,17 +514,17 @@ p{
    position: relative;
    margin: 20px -20px -20px;
    padding: 20px;
-   background: sandybrown;
+   background: #ffffff;
 }
 .chat-body .answer-add input {
    border: none;
-   background: none;
+   background: #ffffff;
    display: block;
    width: 100%;
-   font-size: 16px;
-   line-height: 20px;
-   padding: 0;
-   color: #ffffff;
+   font-size: 1rem;
+   line-height: 30px;
+   padding: 10;
+   color: black;
 }
 .chat input {
    -webkit-appearance: none;

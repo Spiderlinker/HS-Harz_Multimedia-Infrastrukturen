@@ -7,9 +7,17 @@ const nameInput = document.getElementById('name');
 const connectButton = document.getElementById('connect_button');
 
 const choiceContainer = document.getElementById('choice-connection-container');
+const creationContainer = document.getElementById('creation_container');
 const joinRoomButton = document.getElementById('join_room');
+const toCreateRoomButton = document.getElementById('to_create_room');
 const createRoomButton = document.getElementById('create_room');
 const endCallButton = document.getElementById('end_call');
+
+const settingsContainer = document.getElementById('settings_container');
+const stunInput = document.getElementById('stun_server');
+const turnInput = document.getElementById('turn_server');
+const settingsButton = document.getElementById('settings');
+const saveSettingsButton = document.getElementById('save_settings');
 
 const videoChatContainer = document.getElementById('call-container');
 const localVideoComponent = document.getElementById('local-video');
@@ -30,7 +38,7 @@ let rtcPeerConnection; // Connection between the local device and the remote pee
 let roomId;
 
 // Free public STUN servers provided by Google.
-const iceServers = {
+let iceServers = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
@@ -46,11 +54,26 @@ connectButton.addEventListener('click', () => {
 });
 
 joinRoomButton.addEventListener('click', () => {
-  showSelectionContainer();
+  //video, choice, room, creation, settings
+  showContainer('none', 'none', 'block', 'none', 'none');
+});
+
+toCreateRoomButton.addEventListener('click', () => {
+  //video, choice, room, creation, settings
+  showContainer('none', 'none', 'none', 'block', 'none');
 });
 
 createRoomButton.addEventListener('click', () => {
   joinRoom(null);
+});
+
+settingsButton.addEventListener('click', () => {
+  //video, choice, room, creation, settings
+  showContainer('none', 'none', 'none', 'none', 'block');
+});
+
+saveSettingsButton.addEventListener('click', () => {
+  rewriteSettings();
 });
 
 endCallButton.addEventListener('click', () => {
@@ -127,25 +150,34 @@ socket.on('webrtc_ice_candidate', (event) => {
 
 // FUNCTIONS ==================================================================
 function joinRoom(room) {
+  console.log(iceServers);
   if (room === '') {
     alert('Bitte geben Sie eine Raum-ID an!');
   } else {
     roomId = room
     socket.emit('join', room);
-    showVideoConference();
+    //video, choice, room, creation, settings
+    showContainer('block', 'none', 'none', 'none', 'none');
   }
 }
 
-function showVideoConference() {
-  roomSelectionContainer.style = 'display: none';
-  choiceContainer.style = 'display: none';
-  videoChatContainer.style = 'display: block';
+function showContainer(video, choice, room, creation, settings){
+  videoChatContainer.style = `display: ${video}`;
+  choiceContainer.style = `display: ${choice}`;
+  roomSelectionContainer.style = `display: ${room}`;
+  creationContainer.style = `display: ${creation}`;
+  settingsContainer.style = `display: ${settings}`;
 }
 
-function showSelectionContainer() {
-  videoChatContainer.style = 'display: none';
-  choiceContainer.style = 'display: none';
-  roomSelectionContainer.style = 'display: block';
+function rewriteSettings(){
+  iceServers = {
+    iceServers: [
+      { urls: `stun:stun.${stunInput.value}` },
+      { urls: `turn:turn.${turnInput.value}` },
+    ],
+  }
+  //video, choice, room, creation, settings
+  showContainer('none', 'block', 'none', 'none', 'none');
 }
 
 async function setLocalStream(mediaConstraints) {
