@@ -20,6 +20,17 @@ let fileChannel;
 let requestedFileName;
 let receivedBuffers;
 
+// KEY EVENT LISTENER ============================================================
+document.onkeydown = function(event) {
+	if (event.key === 'Enter') {
+        let value = textField.value;
+        if (value) {
+            sendTextMessage(value);
+            textField.value = "";
+        }
+	}
+};
+
 // BUTTON LISTENER ============================================================
 
 shareFileButton.addEventListener('change', (event) => {
@@ -131,7 +142,12 @@ function sendChat(message) {
 }
 
 function sendMessage(message) {
-    chatChannel.send(JSON.stringify(message));
+    try{
+        chatChannel.send(JSON.stringify(message));
+    }catch (error) {
+        console.error('No Connection', error);
+        alert('Es besteht noch keine Verbindung du kannst noch keine Nachrichten schreiben!');
+    }
 }
 
 function sendFileRequest(uuid) {

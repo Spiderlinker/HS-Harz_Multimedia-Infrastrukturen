@@ -49,6 +49,9 @@ let iceServers = {
   ],
 };
 
+// KEY EVENT LISTENER ============================================================
+
+
 // BUTTON LISTENER ============================================================
 connectButton.addEventListener('click', () => {
   joinRoom(roomInput.value);
@@ -195,6 +198,7 @@ async function setLocalStream(mediaConstraints) {
     stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
   } catch (error) {
     console.error('Could not get user media', error);
+    alert('Es konnte nicht auf ihre Kamera und Mikrofon zugegriffen werden. Ein Verbindung is nicht möglich!');
   }
 
   localStream = stream;
