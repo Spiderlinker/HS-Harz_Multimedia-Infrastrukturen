@@ -9,6 +9,7 @@ const connectButton = document.getElementById('connect_button');
 const choiceContainer = document.getElementById('choice-connection-container');
 const joinRoomButton = document.getElementById('join_room');
 const createRoomButton = document.getElementById('create_room');
+const endCallButton = document.getElementById('end_call');
 
 const videoChatContainer = document.getElementById('call-container');
 const localVideoComponent = document.getElementById('local-video');
@@ -50,6 +51,10 @@ joinRoomButton.addEventListener('click', () => {
 
 createRoomButton.addEventListener('click', () => {
   joinRoom(null);
+});
+
+endCallButton.addEventListener('click', () => {
+  location.reload();
 });
 
 // SOCKET EVENT CALLBACKS =====================================================

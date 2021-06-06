@@ -10,7 +10,7 @@ const roomMap = new Map();
  * @param {string} task - Connect / Disconnet um die Client Aktion zu spezifizieren
  * @returns Aktuelle Nutzeranzal im übergebenen Raum
  */
-function checkActualClients(roomId, task){
+function updateActualClients(roomId, task){
   switch(task){
     case "connect":
         return addClientToRoom(roomId);
@@ -31,11 +31,24 @@ function checkActualClients(roomId, task){
  * @returns Aktuelle Nutzeranzal im übergebenen Raum
  */
 function addClientToRoom(roomId){
-    if(!roomMap.has(roomId))
-        return roomMap.set(roomId, 0);
-    clientCount = roomMap.get(roomId);
-    clientCount++;
-    return roomMap.set(roomId, clientCount);
+
+    if(!roomMap.has(roomId)){
+        roomMap.set(roomId, 0);
+        return roomMap.get(roomId);
+    }
+
+    let clientCount = roomMap.get(roomId);
+    clientCount++; 
+    if(clientCount < 2){
+        roomMap.set(roomId, clientCount)
+    }
+    return clientCount;
+}
+
+function isPresent(roomId){
+    if(roomMap.has(roomId))
+        return true;
+    return false;
 }
 
 /**
@@ -54,13 +67,14 @@ function removeClientFromRoom(roomId){
     if(!roomMap.has(roomId))
         return;
     
-    clientCount = roomMap.get(roomId);
+    let clientCount = roomMap.get(roomId);
     clientCount--;
-        
+    roomMap.set(roomId, clientCount);
+
     if(clientCount == -1)
         return deleteRoomFromMap(roomId);
 
-    return roomMap.set(roomId, clientCount);
+    return clientCount;
 }
 
 /**
@@ -75,5 +89,6 @@ function deleteRoomFromMap(roomId){
 
 
 module.exports = {
-    checkActualClients,
+    updateActualClients,
+    isPresent
 }

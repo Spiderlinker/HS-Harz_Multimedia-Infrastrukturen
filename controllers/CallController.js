@@ -1,13 +1,13 @@
 const roomHandler = require('../core/RoomHandler');
 const uuid = require("uuid");
 
-const handleSocket = (socket) => {
+const handleSocketConnection = (socket) => {
   socket.on('join', (roomId) => {
 
     if(roomId == null)
       roomId = uuid.v4();
 
-    const clientCount = roomHandler.checkActualClients(roomId, "connect").get(roomId);
+    const clientCount = roomHandler.updateActualClients(roomId, "connect");
     console.log(`Die aktuelle Nutzeranzahl für den Raum: ${roomId} beträgt: ${clientCount}`);
 
   // These events are emitted only to the sender socket.
@@ -42,9 +42,17 @@ const handleSocket = (socket) => {
     console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_ice_candidate', event)
   })
+  socket.on('disconnecting', () => {
+    socket.rooms.forEach((value) => {
+      if(roomHandler.isPresent(value)){
+        const clientCount = roomHandler.updateActualClients(value, "disconnect");
+        console.log(`Has left room: ${value} usercount beträgt: ${clientCount}`);
+      }
+    });
+  });
 }
 
 //export this function when require
 module.exports = {
-    handleSocket
+    handleSocketConnection
 }

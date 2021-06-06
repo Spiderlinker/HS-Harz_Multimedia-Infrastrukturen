@@ -57,7 +57,7 @@ app.get('/connection', homeController.loadConnectionView);
 
 app.post('/call', homeController.loadUserView);
 
-io.on('connection', callController.handleSocket);
+io.on('connection', callController.handleSocketConnection);
 
 app.use(homeController.load404);
 
