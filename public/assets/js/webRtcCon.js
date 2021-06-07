@@ -1,4 +1,5 @@
 import messageHandler from './MessageHandler.js';
+import iconPaths from './icons/IconPaths.js';
 
 /**
  * DOM Elemente zur Steuerung des Views Connection.ejs
@@ -378,6 +379,14 @@ function sendIceCandidate(event) {
  */
 function muteUnmuteMic(){
   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+
+  if(localStream.getAudioTracks()[0].enabled){
+    micMuteUnmuteButton.innerHTML = iconPaths.mic_enabled;
+  }else{
+    micMuteUnmuteButton.innerHTML = iconPaths.mic_disabled
+  }
+
+
   console.log(localStream.getAudioTracks()[0]);
 }
 
@@ -387,5 +396,12 @@ function muteUnmuteMic(){
  */
 function disableEnableCam(){
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+
+  if(localStream.getVideoTracks()[0].enabled){
+    camDisableEnableButton.innerHTML = iconPaths.cam_enabled;
+  }else{
+    camDisableEnableButton.innerHTML = iconPaths.cam_disabled;
+  }
+
   console.log(localStream.getVideoTracks()[0]);
 }
