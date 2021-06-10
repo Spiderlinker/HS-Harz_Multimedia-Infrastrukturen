@@ -1,20 +1,32 @@
 import fileHandler from './FileHandler.js';
 import iconPaths from './icons/IconPaths.js';
 
+/**
+ * DOM Elemente zur Steuerung der Views establish_connection_container.ejs und creation_container.ejs
+ */
 const nameInput = document.getElementById('name');
 const nameInputCreator = document.getElementById('name_creator');
 
+/**
+ * DOM Elemente zur Steuerung des Views chat.ejs
+ */
 const chatMessages = document.getElementById('chat-messages');
 const shareFileButton = document.getElementById('select-file-input');
 const sendChatButton = document.getElementById('btn-send-chat');
 const textField = document.getElementById('chat-field');
 
+/**
+ * Konstanten
+ */
 const MAXIMUM_MESSAGE_SIZE = 65535;
 const END_OF_FILE_MESSAGE = 'EOF';
 
 const CHAT_CHANNEL_IDENTIFIER = "ChatChannel";
 const FILE_CHANNEL_IDENTIFIER = "FileChannel";
 
+/**
+ * Variablen
+ */
 let chatChannel;
 let fileChannel;
 
@@ -22,6 +34,10 @@ let requestedFileName;
 let receivedBuffers;
 
 // KEY EVENT LISTENER ============================================================
+/** 
+ * Wenn Enter getätigt wird, wird die vom Nutzer im Textfeld eingegebene Nachricht
+ * an die Methode sendTextMessage weitergegeben.
+ */
 document.onkeydown = function(event) {
 	if (event.key === 'Enter') {
         let value = textField.value;
@@ -33,12 +49,18 @@ document.onkeydown = function(event) {
 };
 
 // BUTTON LISTENER ============================================================
-
+/**
+ * Wenn der shareFileButton getätigt wird, wird die vom Nutzer ausgewählte Datei
+ * an die Methode sendFileMessage weitergegeben.
+ */
 shareFileButton.addEventListener('change', (event) => {
     let file = event.target.files[0];
     sendFileMessage(file);
 });
-
+/**
+ * Wenn der sendChatButton getätigt wird, wird die vom Nutzer im Textfeld eingegebene Nachricht
+ * an die Methode sendTextMessage weitergegeben.
+ */
 sendChatButton.addEventListener('click', () => {
     let value = textField.value;
     if (value) {
@@ -48,7 +70,11 @@ sendChatButton.addEventListener('click', () => {
 });
 
 // DATACHANNELS ============================================================
-
+/**
+ * In dieser Methode werden die Channel chatChannel und fileChannel für den Raum-Erzeuger initialisiert.
+ * 
+ * @param {interface} rtcPeerConnection
+ */
 function setupRoomCreateDataChannel(rtcPeerConnection) {
     chatChannel = rtcPeerConnection.createDataChannel(CHAT_CHANNEL_IDENTIFIER);
     chatChannel.onmessage = receiveChat;
@@ -58,6 +84,13 @@ function setupRoomCreateDataChannel(rtcPeerConnection) {
     fileChannel.onmessage = receiveFile;
 }
 
+/**
+ * In dieser Methode werden die Channel chatChannel und fileChannel für den Raum-Beitreter initialisiert.
+ * Da die Channel bereits beim Raum-Ersteller generiert wurden, 
+ * werden auf die bereits bestehenden Channel über die rtcPeerConnection zugegriffen.
+ * 
+ * @param {interface} rtcPeerConnection
+ */
 function setupRoomJoinDataChannel(rtcPeerConnection) {
     rtcPeerConnection.ondatachannel = event => {
         let channel = event.channel;
@@ -76,6 +109,14 @@ function setupRoomJoinDataChannel(rtcPeerConnection) {
 
 
 // CHAT FUNCTIONS  ============================================================ 
+/**
+ * Der zu versendende Nachrichtentext wird zu einem JSON-Object hinzugefügt.
+ * Das JSON-Object beinhaltet den Namen des Absenders, den Zeitstempel, 
+ * die Art der Nachricht (chat) und den Inhalt der Nachricht.
+ * Dieses JSON-Object wird an die Methode sendChat weitergegeben.
+ * 
+ * @param {String} text 
+ */
 function sendTextMessage(text) {
     let messageObj = {
         senderName: getSenderName(),
@@ -86,11 +127,22 @@ function sendTextMessage(text) {
     sendChat(messageObj);
 }
 
+/**
+ * Die zu versendende Datei wird zu einem JSON-Object hinzugefügt und and die Methode sendChat weitergegeben
+ * Das JSON-Object beinhaltet den Namen des Absenders, den Zeitstempel, 
+ * die Art der Nachricht (file) und den Inhalt der Datei.
+ * Der Inhalt der Datei beinhaltet den Dateinamen und die UUID der Datei.
+ * 
+ * @param {File} file 
+ * @returns 
+ */
 function sendFileMessage(file) {
+    //Abbrechen, wenn keine Datei ausgewählt wurde
     if (!file) {
         return;
     }
 
+    //Setzen des Sendernamen
     if(nameInput === undefined && nameInputCreator != undefined){
         nameInput.value = nameInputCreator.value;
     }
@@ -108,6 +160,11 @@ function sendFileMessage(file) {
     sendChat(fileMessageObj);
 }
 
+/**
+ * liefert den Namen des Absenders
+ * 
+ * @returns sender name
+ */
 function getSenderName(){
     if(nameInput.value.length === 0){
         return nameInputCreator.value;
@@ -116,6 +173,14 @@ function getSenderName(){
     }
 }
 
+/**
+ * parsed die Daten der erhaltenen Nachricht zu JSON.
+ * Wenn es sich um eine Chat-Nachricht oder Datei handelt, wird die Herkunft der Nachricht auf 'foreign' gesetzt 
+ * und die Nachricht an die Methode sendMessageToChat weitergegeben.
+ * Wird eine Datei angefragt, wird über den Filehandler die gewählte Datei zur Verfügung gestellt.
+ * 
+ * @param {*} event 
+ */
 function receiveChat(event) {
     const message = JSON.parse(event.data);
     switch (message.type) {
@@ -135,6 +200,11 @@ function receiveChat(event) {
     }
 }
 
+/**
+ * gibt die Nachricht an die Methode sendMessage weiter, setzt die Herkunft der Nachricht auf 'own' 
+ * und gibt die Nachricht an die Methode appendMessageToChat weiter.
+ * @param {JSON} message 
+ */
 function sendChat(message) {
     sendMessage(message)
 
@@ -142,6 +212,11 @@ function sendChat(message) {
     appendMessageToChat(message);
 }
 
+/**
+ * überträgt die übergebene Nachricht über den Channel chatChannel an den Chatpartner.
+ * 
+ * @param {JSON} message 
+ */
 function sendMessage(message) {
     try{
         chatChannel.send(JSON.stringify(message));
@@ -151,6 +226,12 @@ function sendMessage(message) {
     }
 }
 
+/**
+ * Diese Methode wird aufgerufen, wenn ein Nutzer eine ihm/ihr zugesandte Datei herunterladen möchte.
+ * Erstellt ein JSON-Object mit dem Typ 'request' und der uuid als Inhalt 
+ * und übergibt dies an die Methode sendMessage.
+ * @param {string} uuid 
+ */
 function sendFileRequest(uuid) {
     let fileMessageObj = {
         type: 'request',
@@ -159,6 +240,12 @@ function sendFileRequest(uuid) {
     sendMessage(fileMessageObj);
 }
 
+/**
+ * Die übergebene Nachricht wird dem Chat-Fenster hinzugefügt.
+ * Dafür wird zunächst die HTML-Nachricht über die Methode createMessageHTML erzeugt.
+ * Wenn es sich bei der Nachricht um eine Datei handelt, wird ein Button zum Herunterladen der Datei erstellt.
+ * @param {JSON} message 
+ */
 function appendMessageToChat(message) {
     chatMessages.innerHTML += createMessageHTML(message);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -173,6 +260,16 @@ function appendMessageToChat(message) {
     }
 }
 
+/**
+ * wandelt die übergebene Nachricht in HTML um.
+ * Wenn die Nachricht beim Absender dargestellt wird, ist die Herkunft der Nachricht 'own', 
+ * beim Emfänger ist dieses 'foreign'. Die eigenen Nachrichten werden im Chat-Fenster rechts, die empfangenen Nachrichten rechts angezeigt.
+ * Bei einer Chat-Nachricht wird der Inhalt des JSON-Objects dem Message.body hinzugefügt.
+ * Bei Dateien wird der Dateiname und der Link zum Herunterladen dieser dem Body hinzugefügt.
+ * In beiden Fällen, werden der Name des Absenders und der Zeitstempel dargestellt.
+ * @param {JSON} message 
+ * @returns
+ */
 function createMessageHTML(message) {
     let ownMessage = message.src === 'own';
     let messageBody = `<div class="answer ${ownMessage ? 'right' : 'left'}">`;
@@ -209,6 +306,12 @@ function getFormattedTimeFromTimestamp(timestamp) {
 
 // FILE FUNCTIONS  ============================================================ 
 
+/**
+ * überträgt die Datei über den Channel fileChannel an den Chatpartner
+ * 
+ * @param {File} file 
+ * @returns 
+ */
 async function sendFile(file) {
     if (!file) {
         return;
@@ -221,6 +324,11 @@ async function sendFile(file) {
     fileChannel.send(END_OF_FILE_MESSAGE);
 }
 
+/**
+ * die übertragende Datei wird mittels arrayBuffers in ein Blob gelesen, bis EOF erreicht ist. 
+ * Der Blob und der Name der Datei werden an die Methode downloadFile weitergegeben.
+ * @param {*} event 
+ */
 async function receiveFile(event) {
     const data = event.data;
     try {
@@ -241,6 +349,13 @@ async function receiveFile(event) {
     }
 }
 
+/**
+ * erstellt eine URL für die übergebene Datei (blob), 
+ * lädt diese herunter und deaktiviert die ertellte URL anschließend.
+ * 
+ * @param {Blob} blob 
+ * @param {String} fileName 
+ */
 function downloadFile(blob, fileName) {
     const a = document.createElement('a');
     const url = window.URL.createObjectURL(blob);
