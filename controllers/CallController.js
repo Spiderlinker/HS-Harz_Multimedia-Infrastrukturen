@@ -72,6 +72,7 @@ const handleSocketConnection = (socket) => {
         console.log(`Has left room: ${value} usercount beträgt: ${clientCount}`);
       }
     });
+    console.log(socket.rooms);
   });
 }
 

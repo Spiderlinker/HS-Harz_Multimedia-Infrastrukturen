@@ -248,7 +248,7 @@ function rewriteSettings(){
   iceServers = {
     iceServers: [
       { urls: `stun:stun.${stunInput.value}` },
-      { urls: `turn:turn.${turnInput.value}` },
+     // { urls: `turn:turn.${turnInput.value}` },
     ],
   }
   //video, choice, room, creation, settings
@@ -365,6 +365,7 @@ function setRemoteStream(event) {
  * @param {*} event 
  */
 function sendIceCandidate(event) {
+  console.log(event['target']);
   if (event.candidate) {
     socket.emit('webrtc_ice_candidate', {
       roomId,
