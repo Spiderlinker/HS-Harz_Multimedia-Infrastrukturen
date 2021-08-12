@@ -365,7 +365,7 @@ function setRemoteStream(event) {
  * @param {*} event 
  */
 function sendIceCandidate(event) {
-  console.log(event['target']);
+  //console.log(event['target']);
   if (event.candidate) {
     socket.emit('webrtc_ice_candidate', {
       roomId,

@@ -26,15 +26,15 @@ const handleSocketConnection = (socket) => {
 
   // These events are emitted only to the sender socket.
   if (clientCount == 0) {
-    console.log(`Creating room ${roomId} and emitting room_created socket event`)
+    console.log(`Erstellt Raum mit der ID: ${roomId} und triggert room_created socket event.`)
     socket.join(roomId)
     socket.emit('room_created', roomId)
   } else if (clientCount == 1) {
-    console.log(`Joining room ${roomId} and emitting room_joined socket event`)
+    console.log(`Tritt Raum mit der ID: ${roomId} bei und triggert room_joined socket event.`)
     socket.join(roomId)
     socket.emit('room_joined', roomId)
   } else {
-    console.log(`Can't join room ${roomId}, emitting full_room socket event`)
+    console.log(`Kann Raum mit der Raum ID: ${roomId} nicht beitreten und triggert full_room socket event.`)
     socket.emit('full_room', roomId)
   }
   })
@@ -44,19 +44,19 @@ const handleSocketConnection = (socket) => {
    * Alle Events dienen lediglich der Steuerung / Kommunikation zur Aushandelung der WebRTC Verbindung 
    */
   socket.on('start_call', (roomId) => {
-    console.log(`Broadcasting start_call event to peers in room ${roomId}`)
+    console.log(`Broadcasting start_call event zu allen anderen Teilnehmern im Raum mit der ID: ${roomId}`)
     socket.broadcast.to(roomId).emit('start_call')
   })
   socket.on('webrtc_offer', (event) => {
-    console.log(`Broadcasting webrtc_offer event to peers in room ${event.roomId}`)
+    console.log(`Broadcasting webrtc_offer event zu allen anderen Teilnehmern im Raum mit der ID: ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_offer', event.sdp)
   })
   socket.on('webrtc_answer', (event) => {
-    console.log(`Broadcasting webrtc_answer event to peers in room ${event.roomId}`)
+    console.log(`Broadcasting webrtc_answer event zu allen anderen Teilnehmern im Raum mit der ID: ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_answer', event.sdp)
   })
   socket.on('webrtc_ice_candidate', (event) => {
-    console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${event.roomId}`)
+    console.log(`Broadcasting webrtc_ice_candidate event zu allen anderen Teilnehmern im Raum mit der ID: ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_ice_candidate', event)
   })
 
@@ -69,7 +69,7 @@ const handleSocketConnection = (socket) => {
     socket.rooms.forEach((value) => {
       if(roomHandler.isPresent(value)){
         const clientCount = roomHandler.updateActualClients(value, "disconnect");
-        console.log(`Has left room: ${value} usercount beträgt: ${clientCount}`);
+        console.log(`Ein Teilnehmer hat den Raum verlassen: ${value} Aktuelle Teilnehmeranzahl: ${clientCount}`);
       }
     });
     console.log(socket.rooms);
